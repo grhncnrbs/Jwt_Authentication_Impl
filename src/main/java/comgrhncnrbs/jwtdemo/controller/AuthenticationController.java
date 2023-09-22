@@ -1,5 +1,7 @@
 package comgrhncnrbs.jwtdemo.controller;
 
+import comgrhncnrbs.jwtdemo.dto.JwtAuthenticationResponse;
+import comgrhncnrbs.jwtdemo.dto.SignInRequest;
 import comgrhncnrbs.jwtdemo.dto.SignUpRequest;
 import comgrhncnrbs.jwtdemo.entities.User;
 import comgrhncnrbs.jwtdemo.services.AuthenticationService;
@@ -19,5 +21,10 @@ public class AuthenticationController {
     @PostMapping("/signup")
     public ResponseEntity<User> signUp(@RequestBody SignUpRequest signUpRequest) {
         return ResponseEntity.ok(authenticationService.signUp(signUpRequest));
+    }
+
+    @PostMapping("/signin")
+    public ResponseEntity<JwtAuthenticationResponse> signIn(@RequestBody SignInRequest signInRequest) {
+        return ResponseEntity.ok(authenticationService.signIn(signInRequest));
     }
 }
