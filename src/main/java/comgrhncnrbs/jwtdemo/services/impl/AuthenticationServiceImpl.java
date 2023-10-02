@@ -1,6 +1,7 @@
 package comgrhncnrbs.jwtdemo.services.impl;
 
 import comgrhncnrbs.jwtdemo.dto.JwtAuthenticationResponse;
+import comgrhncnrbs.jwtdemo.dto.RefreshTokenRequest;
 import comgrhncnrbs.jwtdemo.dto.SignInRequest;
 import comgrhncnrbs.jwtdemo.dto.SignUpRequest;
 import comgrhncnrbs.jwtdemo.entities.Role;
@@ -47,5 +48,19 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         jwtAuthenticationResponse.setToken(jwt);
         jwtAuthenticationResponse.setRefreshToken(refreshToken);
         return jwtAuthenticationResponse;
+    }
+
+    public JwtAuthenticationResponse refreshToken(RefreshTokenRequest refreshTokenRequest) {
+        String userEmail = jwtService.extractUserName(refreshTokenRequest.getToken());
+        User user = (User) userRepository.findByEmail(userEmail).orElseThrow();
+
+        if (jwtService.isTokenValid(refreshTokenRequest.getToken(), user)) {
+            var jwt = jwtService.generateToken(user);
+            JwtAuthenticationResponse jwtAuthenticationResponse = new JwtAuthenticationResponse();
+            jwtAuthenticationResponse.setToken(jwt);
+            jwtAuthenticationResponse.setRefreshToken(refreshTokenRequest.getToken());
+            return jwtAuthenticationResponse;
+        }
+        return null;
     }
 }
